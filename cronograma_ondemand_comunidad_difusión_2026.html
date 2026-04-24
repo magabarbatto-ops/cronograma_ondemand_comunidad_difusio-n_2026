@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronograma On Demand · Gelatina 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ef;
+    --surface: #ffffff;
+    --surface2: #f0ece4;
+    --border: #ddd8ce;
+    --ink: #1a1714;
+    --muted: #8a8178;
+    --accent: #c4471a;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Playfair Display', serif;
+    --sans: 'DM Sans', sans-serif;
+    --pd: #1d4e89;
+    --bs: #2d6a4f;
+    --co: #7b3f9e;
+    --bb: #c4471a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    padding: 48px 24px 80px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight: 900;
+    line-height: 1.05;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .header-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .meta-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+
+  /* Puntos a definir */
+  .por-definir {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+  }
+
+  .por-definir h3 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .por-definir ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .por-definir li {
+    font-size: 13px;
+    color: var(--ink);
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .por-definir li::before {
+    content: '○';
+    color: var(--accent);
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  /* Leyenda */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .leg-dot {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+  }
+
+  /* Tabla semanal */
+  .weekly-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+
+  .weekly-table th {
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 8px;
+    text-align: left;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    white-space: nowrap;
+  }
+
+  .weekly-table th.mundial { background: var(--accent); }
+  .weekly-table th.postmundial { background: var(--bs); }
+
+  .weekly-table th:first-child {
+    width: 110px;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+  }
+
+  .project-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: white;
+    padding: 10px 8px;
+    vertical-align: middle;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+
+  .pl-pd { background: var(--pd); }
+  .pl-bs { background: var(--bs); }
+  .pl-co { background: var(--co); }
+  .pl-bb { background: var(--bb); }
+
+  .cell {
+    padding: 6px;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    vertical-align: top;
+    background: var(--surface);
+    min-width: 110px;
+  }
+
+  .cell.mundial-bg { background: rgba(196,71,26,.03); }
+
+  .ev {
+    font-size: 10px;
+    line-height: 1.4;
+    padding: 3px 6px;
+    border-radius: 2px;
+    margin-bottom: 3px;
+    border-left: 2px solid;
+    display: block;
+  }
+
+  .ev-pd { background: rgba(29,78,137,.08);  border-color: var(--pd); color: var(--pd); }
+  .ev-bs { background: rgba(45,106,79,.08);  border-color: var(--bs); color: var(--bs); }
+  .ev-co { background: rgba(123,63,158,.08); border-color: var(--co); color: var(--co); }
+  .ev-bb { background: rgba(196,71,26,.08);  border-color: var(--bb); color: var(--bb); }
+
+  .ev strong { font-weight: 700; }
+
+  .scroll-hint {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-align: right;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* Fichas */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  .fichas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .ficha {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .ficha-header {
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .fh-pd { background: var(--pd); }
+  .fh-bs { background: var(--bs); }
+  .fh-co { background: var(--co); }
+  .fh-bb { background: var(--bb); }
+
+  .ficha-body { padding: 14px; }
+  .ficha-body ul { list-style: none; padding: 0; }
+
+  .ficha-body li {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .ficha-body li:last-child { border-bottom: none; }
+  .ficha-body li::before { content: '—'; color: var(--muted); font-size: 10px; flex-shrink: 0; }
+
+  .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Gelatina · Producción Ejecutiva · Documento interno</div>
+  <h1>Cronograma <em>On Demand</em></h1>
+  <div class="header-meta">
+    <span class="meta-pill">Abril → Julio 2026</span>
+    <span class="meta-pill" style="background:var(--pd)">Permitime Dudar</span>
+    <span class="meta-pill" style="background:var(--bs)">Bestsellers</span>
+    <span class="meta-pill" style="background:var(--co)">Comedia</span>
+    <span class="meta-pill" style="background:var(--bb)">Bang Bang</span>
+  </div>
+</header>
+
+<!-- PUNTOS A DEFINIR -->
+<div class="por-definir">
+  <h3>A definir</h3>
+  <ul>
+    <li>Campañas de socios</li>
+    <li>Campañas de difusión</li>
+  </ul>
+</div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--pd)"></div> Permitime Dudar</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--bs)"></div> Bestsellers</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--co)"></div> Comedia</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--bb)"></div> Bang Bang</div>
+  <div class="leg-item" style="color:var(--ink)">🎬 = grabación</div>
+  <div class="leg-item" style="color:var(--ink)">⭐ = estreno</div>
+</div>
+
+<div class="scroll-hint">← deslizá para ver todas las semanas →</div>
+
+<div class="table-wrap">
+<table class="weekly-table">
+  <thead>
+    <tr>
+      <th>Proyecto</th>
+      <th>27/4–3/5</th>
+      <th>4/5–10/5</th>
+      <th>11/5–17/5</th>
+      <th>18/5–24/5</th>
+      <th>25/5–31/5</th>
+      <th>1/6–7/6</th>
+      <th>8/6–14/6</th>
+      <th class="mundial">15/6–21/6 ⚽</th>
+      <th class="mundial">22/6–28/6 ⚽</th>
+      <th class="mundial">29/6–5/7 ⚽</th>
+      <th class="mundial">6/7–12/7 ⚽</th>
+      <th class="mundial">13/7–19/7 ⚽</th>
+      <th class="postmundial">20/7–26/7</th>
+      <th class="postmundial">27/7–31/7</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- PERMITIME DUDAR -->
+    <tr>
+      <td class="project-label pl-pd">Permitime<br>Dudar</td>
+      <td class="cell">
+        <span class="ev ev-pd"><strong>5/5</strong> Evento presentación</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-pd"><strong>⭐ 7/5</strong> Estreno caps 1, 2 y 3</span>
+        <span class="ev ev-pd"><strong>⭐ 11/5</strong> Estreno cap 4</span>
+      </td>
+      <td class="cell"></td>
+      <td class="cell"></td>
+      <td class="cell"></td>
+      <td class="cell"></td>
+      <td class="cell"></td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell"></td>
+      <td class="cell"></td>
+    </tr>
+
+    <!-- BESTSELLERS -->
+    <tr>
+      <td class="project-label pl-bs">Bestsellers</td>
+      <td class="cell">
+        <span class="ev ev-bs">Post-prod caps 1, 2 y 3</span>
+        <span class="ev ev-bs">Armado trailer</span>
+        <span class="ev ev-bs">Venta activa (carpeta)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bs">🎬 Grabación cap 4 (Sacheri)</span>
+        <span class="ev ev-bs">Post-prod caps 1, 2 y 3</span>
+        <span class="ev ev-bs">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bs">Post-producción</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bs">Post-producción</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bs"><strong>⭐ 25/5</strong> Estreno cap 1</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bs"><strong>⭐ 1/6</strong> Estreno cap 2</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bs"><strong>⭐ 8/6</strong> Estreno cap 3</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-bs"><strong>⭐ 18/6</strong> Estreno cap 4</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-bs">Serie completa disponible</span>
+      </td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell mundial-bg"></td>
+      <td class="cell"></td>
+      <td class="cell"></td>
+    </tr>
+
+    <!-- COMEDIA -->
+    <tr>
+      <td class="project-label pl-co">Comedia</td>
+      <td class="cell">
+        <span class="ev ev-co">Post-producción cap 1: Martín Cirio</span>
+        <span class="ev ev-co">Venta activa (carpeta)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-co">Post-producción cap 1: Martín Cirio</span>
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-co">🎬 Grabación cap 2: El Trinche (fecha a confirmar)</span>
+        <span class="ev ev-co">Post-producción</span>
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-co">🎬 29/5 Grabación cap 3: Bertucelli</span>
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-co">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-co"><strong>⭐ ~23/24 jul</strong> Estreno tentativo · jueves o viernes</span>
+      </td>
+      <td class="cell"></td>
+    </tr>
+
+    <!-- BANG BANG -->
+    <tr>
+      <td class="project-label pl-bb">Bang Bang</td>
+      <td class="cell">
+        <span class="ev ev-bb">Armado carpeta de venta</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">Venta activa (carpeta)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">Venta activa (carpeta)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">Venta activa (carpeta)</span>
+        <span class="ev ev-bb">Prueba cámara y luces</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">Venta activa (carpeta)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">🎬 Grabación piloto</span>
+        <span class="ev ev-bb">Venta activa (carpeta)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">🎬 Grabación / edición piloto</span>
+        <span class="ev ev-bb">Venta activa (carpeta)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-bb">Edición piloto</span>
+        <span class="ev ev-bb">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-bb">Trailer listo</span>
+        <span class="ev ev-bb">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-bb">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-bb">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell mundial-bg">
+        <span class="ev ev-bb">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">Venta activa (carpeta + trailer)</span>
+      </td>
+      <td class="cell">
+        <span class="ev ev-bb">Venta activa (carpeta + trailer)</span>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<hr class="divider">
+
+<!-- FICHAS -->
+<div class="section-eyebrow">Estado y acciones por proyecto</div>
+<div class="fichas-grid">
+
+  <div class="ficha">
+    <div class="ficha-header fh-pd">Permitime Dudar</div>
+    <div class="ficha-body">
+      <ul>
+        <li>4 caps grabados · post-producción</li>
+        <li>5/5 · Evento de presentación</li>
+        <li>⭐ 7/5 · Estreno caps 1, 2 y 3</li>
+        <li>⭐ 11/5 · Estreno cap 4</li>
+        <li><a href="https://drive.google.com/file/d/1F_N_tiSYdH46B_ogtTgow71uxqEblTZ4/view?usp=sharing" target="_blank" style="color:var(--pd)">→ Carpeta de venta</a></li>
+        <li style="color:var(--accent)">○ Definir campaña de socios (metas / contador)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header fh-bs">Bestsellers</div>
+    <div class="ficha-body">
+      <ul>
+        <li>3 caps grabados · en color/post</li>
+        <li>🎬 Cap 4 (Sacheri) · grabación 4–10/5</li>
+        <li>Deck de venta · chequear y reformular</li>
+        <li>Venta activa desde sem 27/4 (carpeta)</li>
+        <li>Desde sem 4/5 · venta (carpeta + trailer)</li>
+        <li>⭐ 25/5 · Estreno cap 1</li>
+        <li>⭐ 1/6 · Estreno cap 2</li>
+        <li>⭐ 8/6 · Estreno cap 3</li>
+        <li>⭐ 18/6 · Estreno cap 4</li>
+        <li style="color:var(--accent)">○ Definir campaña de socios (metas / contador)</li>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header fh-co">Comedia con Adri Lakerman</div>
+    <div class="ficha-body">
+      <ul>
+        <li>Cap 1 grabado (Cirio) · en post-prod</li>
+        <li>🎬 Sem 11/5 · El Trinche · día a confirmar</li>
+        <li>🎬 29/5 · Bertucelli</li>
+        <li>Trailer + carpeta · sem 11/5</li>
+        <li>Venta activa desde sem 11/5</li>
+        <li>⭐ ~23/24 jul · Estreno tentativo · jueves o viernes</li>
+        <li style="color:var(--accent)">○ Definir campaña de socios (metas / contador)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header fh-bb">Bang Bang</div>
+    <div class="ficha-body">
+      <ul>
+        <li>Guion cap 1 cerrado</li>
+        <li>Presupuesto a confirmar antes 23/4</li>
+        <li>Sem 27/4 · Armado carpeta de venta</li>
+        <li>Venta activa desde sem 11/5</li>
+        <li>Sem 18/5 · Prueba cámara y luces</li>
+        <li>🎬 Jun · Grabación + edición piloto</li>
+        <li>Desde sem 15/6 · venta (carpeta + trailer)</li>
+        <li>Estreno estimado: post-mundial (ago+)</li>
+        <li style="color:var(--accent)">○ Definir campaña de socios (metas / contador)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
